@@ -13,12 +13,21 @@ struct LoadingView: View {
     @State private var email = ""
     @State private var password = ""
     
-    // MARK: - View
+    var userRequest : CreateUserRequest { get {
+        return CreateUserRequest(name: "someName", email: self.email, password: self.password, verifyPassword: self.password)
+        }
+    }
+    
+    @State var authenticationDidFail: Bool = false
+    @State var authenticationDidSucceed: Bool = false
+    
     var body: some View {
-        VStack() {
-            Text("iOS App Templates")
+        NavigationView {
+        VStack {
+            Text("Phone Book App")
                 .font(.largeTitle).foregroundColor(Color.white)
-                .padding([.top, .bottom], 40)
+                .padding(.bottom, 40)
+                .padding(.top, -40)
                 .shadow(radius: 10.0, x: 20, y: 10)
             
             Image("book")
@@ -43,29 +52,55 @@ struct LoadingView: View {
                     .shadow(radius: 10.0, x: 20, y: 10)
                 }.padding([.leading, .trailing], 27.5)
             
-            Button(action: {}) {
-                Text("Sign In")
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .padding()
-                    .frame(width: 300, height: 50)
-                    .background(Color.green)
-                    .cornerRadius(15.0)
-                    .shadow(radius: 10.0, x: 20, y: 10)
-            }.padding(.top, 50)
+            if authenticationDidFail {
+                Text("Information not correct. Try again.")
+                    .offset(y: -10)
+                    .foregroundColor(.red)
+            }
+            if authenticationDidSucceed == false {
+                Button(action: {RESTController.logInUser(username: self.email, password: self.password, withCompletion: { resp in
+                        if let response = resp {
+                            self.authenticationDidFail = false
+                            self.authenticationDidSucceed = true
+                        } else {
+                            self.authenticationDidFail = true
+                            self.authenticationDidSucceed = false
+                        }
+                    })}) {
+                    Text("Sign In")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(width: 300, height: 50)
+                        .background(Color.green)
+                        .cornerRadius(15.0)
+                        .shadow(radius: 10.0, x: 20, y: 10)
+                }.padding(.top, 50)
+            } else {
+                Text("Login succeeded!")
+                        .font(.headline)
+                        .frame(width: 250, height: 80)
+                        .background(Color.green)
+                        .cornerRadius(20.0)
+                        .foregroundColor(.white)
+                        .animation(Animation.default)
+            }
             
             Spacer()
             HStack(spacing: 0) {
                 Text("Don't have an account? ")
-                Button(action: {}) {
+                NavigationLink(destination: SignUpView()) {
                     Text("Sign Up")
                         .foregroundColor(.black)
-                }
+                    }
+                .navigationBarHidden(true)
             }
         }
         .background(
             LinearGradient(gradient: Gradient(colors: [.purple,.blue]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all))
+        }.navigationBarHidden(true)
+        .navigationBarTitle("")
     }
 }
 
@@ -75,8 +110,10 @@ extension Color {
     }
 }
 
+#if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         LoadingView()
     }
 }
+#endif
