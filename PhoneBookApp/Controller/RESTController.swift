@@ -30,7 +30,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func logInUser(username: String, password: String, withCompletion completion: @escaping (UserToken?) -> Void) {
+    static func logInUser(username: String, password: String, withCompletion completion: @escaping (UserTokenResponse?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/login")!
         let loginString = String(format: "%@:%@", username, password)
@@ -46,8 +46,31 @@ final class RESTController {
                 completion(nil)
                 return
             }
-            let wrapper = try? JSONDecoder().decode(UserToken.self, from: data)
+            let wrapper = try? JSONDecoder().decode(UserTokenResponse.self, from: data)
             completion(wrapper)
+        }
+        task.resume()
+    }
+    
+    static func logOutUser(token: String, withCompletion completion: @escaping (URLResponse?) -> Void) {
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
+        let url = URL(string: "http://localhost:8080/userToken")!
+        let tokenData = token.data(using: String.Encoding.utf8)!
+//        let base64LoginString = tokenData.base64EncodedString()
+        
+//        var sessionConfig = URLSessionConfiguration.default
+//        var authValue: String? = "Bearer \(tokenData)"
+//        session.configuration.httpAdditionalHeaders = ["Authorization": authValue ?? ""]
+        // create the request
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            guard let data = data else {
+                completion(nil)
+                return
+            }
+            completion(response)
         }
         task.resume()
     }

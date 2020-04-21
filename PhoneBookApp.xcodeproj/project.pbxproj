@@ -16,6 +16,7 @@
 		A98522C3244B4C0100DF1D56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A98522C2244B4C0100DF1D56 /* Preview Assets.xcassets */; };
 		A98522C6244B4C0100DF1D56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A98522C4244B4C0100DF1D56 /* LaunchScreen.storyboard */; };
 		A9DC6317244E245D00E09749 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC6316244E245D00E09749 /* SignUpView.swift */; };
+		A9E8B413244F79A800C30008 /* ShowContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E8B412244F79A800C30008 /* ShowContactsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		A98522C5244B4C0100DF1D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A98522C7244B4C0100DF1D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9DC6316244E245D00E09749 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
+		A9E8B412244F79A800C30008 /* ShowContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowContactsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 			children = (
 				A98522BD244B4C0000DF1D56 /* LoadingView.swift */,
 				A9DC6316244E245D00E09749 /* SignUpView.swift */,
+				A9E8B412244F79A800C30008 /* ShowContactsView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -188,6 +191,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A901FF82244B5C62009D0776 /* UserModels.swift in Sources */,
+				A9E8B413244F79A800C30008 /* ShowContactsView.swift in Sources */,
 				A98522BA244B4C0000DF1D56 /* AppDelegate.swift in Sources */,
 				A901FF80244B5A3B009D0776 /* RESTController.swift in Sources */,
 				A98522BC244B4C0000DF1D56 /* SceneDelegate.swift in Sources */,

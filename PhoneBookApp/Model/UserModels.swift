@@ -43,7 +43,12 @@ struct User: Codable {
     
 }
 
-struct UserToken : Codable {
-    var id: UUID
+struct UserTokenResponse : Codable {
+    var value: String
 
+}
+
+class UserToken : ObservableObject {
+    @Published var value: String? = nil
+    
 }

@@ -12,6 +12,7 @@ struct LoadingView: View {
         // MARK: - Propertiers
     @State private var email = ""
     @State private var password = ""
+    @State private var wrongAttempt = false
     
     var userRequest : CreateUserRequest { get {
         return CreateUserRequest(name: "someName", email: self.email, password: self.password, verifyPassword: self.password)
@@ -20,6 +21,8 @@ struct LoadingView: View {
     
     @State var authenticationDidFail: Bool = false
     @State var authenticationDidSucceed: Bool = false
+    
+    @EnvironmentObject var userToken : UserToken
     
     var body: some View {
         NavigationView {
@@ -59,10 +62,12 @@ struct LoadingView: View {
             }
             if authenticationDidSucceed == false {
                 Button(action: {RESTController.logInUser(username: self.email, password: self.password, withCompletion: { resp in
-                        if let response = resp {
+                    if let response = resp {
                             self.authenticationDidFail = false
                             self.authenticationDidSucceed = true
+                        self.userToken.value = (response as UserTokenResponse).value
                         } else {
+                            self.wrongAttempt.toggle()
                             self.authenticationDidFail = true
                             self.authenticationDidSucceed = false
                         }
@@ -75,6 +80,8 @@ struct LoadingView: View {
                         .background(Color.green)
                         .cornerRadius(15.0)
                         .shadow(radius: 10.0, x: 20, y: 10)
+                        .offset(x: self.wrongAttempt ? -10 : 0)
+                        .animation(Animation.default.repeatCount(5).speed(5.0))
                 }.padding(.top, 50)
             } else {
                 Text("Login succeeded!")
@@ -84,6 +91,9 @@ struct LoadingView: View {
                         .cornerRadius(20.0)
                         .foregroundColor(.white)
                         .animation(Animation.default)
+                NavigationLink("", destination: ShowContactsView(), isActive: $authenticationDidSucceed)
+                    .navigationBarBackButtonHidden(true)
+                
             }
             
             Spacer()
@@ -96,6 +106,10 @@ struct LoadingView: View {
                 .navigationBarHidden(true)
             }
         }
+        .onAppear(perform: {
+            self.email = ""
+            self.password = ""
+        })
         .background(
             LinearGradient(gradient: Gradient(colors: [.purple,.blue]), startPoint: .top, endPoint: .bottom)
                 .edgesIgnoringSafeArea(.all))
