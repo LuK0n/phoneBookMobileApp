@@ -58,7 +58,7 @@ struct SignUpView: View {
                 
             Button(action: {
                 RESTController.createUser(requestData: CreateUserRequest(name: self.name, email: self.email, password: self.password, verifyPassword: self.verifyPass), withCompletion: { resp in
-                    if let response = resp {
+                    if let _ = resp {
                         self.mode.wrappedValue.dismiss()
                     } else {
                         self.wrongAttempt.toggle()

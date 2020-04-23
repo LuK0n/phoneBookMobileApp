@@ -39,7 +39,9 @@ struct User: Codable {
     var id: UUID
     
     /// User's full name.
-    var value: String
+    var name: String
+    
+    var email: String
     
 }
 

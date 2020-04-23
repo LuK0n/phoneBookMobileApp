@@ -21,7 +21,7 @@ struct LoadingView: View {
     
     @State var authenticationDidFail: Bool = false
     @State var authenticationDidSucceed: Bool = false
-    
+        
     @EnvironmentObject var userToken : UserToken
     
     var body: some View {

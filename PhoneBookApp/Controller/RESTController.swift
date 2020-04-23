@@ -55,22 +55,35 @@ final class RESTController {
     static func logOutUser(token: String, withCompletion completion: @escaping (URLResponse?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/userToken")!
-        let tokenData = token.data(using: String.Encoding.utf8)!
-//        let base64LoginString = tokenData.base64EncodedString()
-        
-//        var sessionConfig = URLSessionConfiguration.default
-//        var authValue: String? = "Bearer \(tokenData)"
-//        session.configuration.httpAdditionalHeaders = ["Authorization": authValue ?? ""]
         // create the request
         var request = URLRequest(url: url)
         request.httpMethod = "DELETE"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            guard let _ = data else {
+                completion(nil)
+                return
+            }
+            completion(response)
+        }
+        task.resume()
+    }
+    
+    static func getContacts(token: String, withCompletion completion: @escaping ([Contact]?) -> Void) {
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
+        let url = URL(string: "http://localhost:8080/contacts")!
+
+        // create the request
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let data = data else {
                 completion(nil)
                 return
             }
-            completion(response)
+            let wrapper = try? JSONDecoder().decode([Contact].self, from: data)
+            completion(wrapper)
         }
         task.resume()
     }
