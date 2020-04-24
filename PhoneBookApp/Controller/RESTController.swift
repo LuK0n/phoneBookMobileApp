@@ -69,21 +69,46 @@ final class RESTController {
         task.resume()
     }
     
-    static func getContacts(token: String, withCompletion completion: @escaping ([Contact]?) -> Void) {
+    static func getContacts(token: String, withCompletion completion: @escaping ([ContactResp]?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/contacts")!
 
         // create the request
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let data = data else {
                 completion(nil)
                 return
             }
-            let wrapper = try? JSONDecoder().decode([Contact].self, from: data)
+            let wrapper = try? JSONDecoder().decode([ContactResp].self, from: data)
             completion(wrapper)
+        }
+        task.resume()
+    }
+    
+    static func addContact(token: String, contact: ContactResp, withCompletion completion: @escaping (URLResponse?) -> Void) {
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
+        let url = URL(string: "http://localhost:8080/contacts")!
+        // create the request
+        
+        var request = URLRequest(url: url)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let jsonData = try! encoder.encode(contact)
+        request.httpBody = jsonData
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            guard let _ = data else {
+                completion(nil)
+                return
+            }
+            completion(response)
         }
         task.resume()
     }

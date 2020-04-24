@@ -8,11 +8,10 @@
 
 import Foundation
 
-class Contact : Codable, Identifiable {
+struct Contact : Identifiable, Codable {
     
-    /// Contact's unique identifier.
-    var id: UUID?
-    
+    var id = UUID()
+        
     /// Contact's full name.
     var name: String
     
@@ -20,14 +19,51 @@ class Contact : Codable, Identifiable {
     var email: String
     
     /// Contact's phone number.
-    var phoneNumber: Int
+    var phoneNumb: Int
     
     /// Relation to user
     
     init(id: UUID?, name: String, email: String, phoneNumber: Int) {
-        self.id = id
         self.name = name
         self.email = email
-        self.phoneNumber = phoneNumber
+        self.phoneNumb = phoneNumber
+    }
+}
+
+class ContactResp : Identifiable, Codable {
+
+    /// Contact's unique identifier.
+    var id = UUID()
+    
+    /// Contact's full name.
+     var name: String
+    
+    /// Contact's email address.
+     var email: String
+    
+    /// Contact's phone number.
+     var phoneNumb: Int
+    
+    /// Relation to user
+    
+    init(id: UUID?, name: String, email: String, phoneNumber: Int) {
+        self.name = name
+        self.email = email
+        self.phoneNumb = phoneNumber
+    }
+}
+
+extension Contact: Hashable {
+
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.hashValue)
+    }
+}
+
+
+extension Contact: Equatable {
+
+    public static func ==(lhs: Contact, rhs: Contact) -> Bool {
+        return lhs.id == rhs.id
     }
 }

@@ -7,6 +7,8 @@
 //
 
 import Foundation
+import SwiftUI
+
 
 /// Data required to create a user.
 struct CreateUserRequest: Codable {
@@ -35,7 +37,7 @@ struct UserResponse: Codable {
     var email: String
 }
 
-struct User: Codable {
+class User: Codable {
     var id: UUID
     
     /// User's full name.

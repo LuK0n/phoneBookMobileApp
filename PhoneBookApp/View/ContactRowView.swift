@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ContactRowView: View {
     
-    let contact : Contact    
+    let contact : Contact
     
     var body: some View {
         HStack(alignment: .center) {
@@ -23,11 +23,10 @@ struct ContactRowView: View {
             .padding(25)
             VStack {
                 Text("\(contact.name)").bold().font(.system(size: 25))
-                Text("0\(contact.phoneNumber.formattedWithSeparator)").italic().font(.system(size: 20))
+                Text("0\(contact.phoneNumb.formattedWithSeparator)").italic().font(.system(size: 20))
                 Text("\(contact.email)").italic().font(.system(size: 20))
-            }
-        }.edgesIgnoringSafeArea(.all)
-        .scaledToFill()
+            }.foregroundColor(Color.white)
+        }
     }
 }
 

@@ -12,13 +12,17 @@ struct ContactDetailView: View {
     
     let contact : Contact
     
+    @EnvironmentObject var userToken : UserToken
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("")
     }
 }
 
+#if DEBUG
 struct ContactDetail_Previews: PreviewProvider {
     static var previews: some View {
         ContactDetailView(contact: Contact(id: nil, name: "Mark Markov", email: "mail@server.com", phoneNumber: 0945648533))
     }
 }
+#endif
