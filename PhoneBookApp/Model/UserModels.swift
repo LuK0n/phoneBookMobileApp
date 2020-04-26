@@ -47,6 +47,11 @@ class User: Codable {
     
 }
 
+class UserId: Codable {
+    var id: UUID
+    
+}
+
 struct UserTokenResponse : Codable {
     var value: String
 

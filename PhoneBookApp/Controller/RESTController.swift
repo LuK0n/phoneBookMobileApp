@@ -89,7 +89,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func addContact(token: String, contact: ContactResp, withCompletion completion: @escaping (URLResponse?) -> Void) {
+    static func addContact(token: String, contact: Contact, withCompletion completion: @escaping (ContactResp?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/contacts")!
         // create the request
@@ -104,11 +104,64 @@ final class RESTController {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            guard let data = data else {
+                completion(nil)
+                return
+            }
+            let wrapper = try? JSONDecoder().decode(ContactResp.self, from: data)
+            completion(wrapper)
+        }
+        task.resume()
+    }
+    
+    static func changeImage(token: String, imageRequest: CreatePictureRequest, withCompletion completion: @escaping (URLResponse?) -> Void) {
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
+        let url = URL(string: "http://localhost:8080/pictures")!
+        // create the request
+        
+        var request = URLRequest(url: url)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let jsonData = try! encoder.encode(imageRequest)
+        request.httpBody = jsonData
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let _ = data else {
                 completion(nil)
                 return
             }
             completion(response)
+        }
+        task.resume()
+    }
+    
+    static func getImage(token: String, contactId: UUID, withCompletion completion: @escaping (PictureResponse?) -> Void) {
+        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
+        let url = URL(string: "http://localhost:8080/picturesGet")!
+        // create the request
+        
+        var request = URLRequest(url: url)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        let contactIdModified = contactId.description.replacingOccurrences(of: "-", with: "")
+        let pictureReq = PictureRequest(contactId: contactId)
+        let jsonData = try! encoder.encode(pictureReq)
+        request.httpBody = jsonData
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
+            guard let data = data else {
+                completion(nil)
+                return
+            }
+            
+            let wrapper = try? JSONDecoder().decode(PictureResponse.self, from: data)
+            completion(wrapper)
         }
         task.resume()
     }

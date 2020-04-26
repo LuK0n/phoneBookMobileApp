@@ -11,16 +11,27 @@ import SwiftUI
 struct ContactRowView: View {
     
     let contact : Contact
+    @EnvironmentObject var userToken : UserToken
+    
+    @State var image : Image = Image("book")
     
     var body: some View {
         HStack(alignment: .center) {
-            Image("book")
+            image
             .resizable()
             .frame(width: 60, height: 60)
             .clipShape(Circle())
             .clipped()
             .overlay(Circle().stroke(Color.white, lineWidth: 1))
             .padding(25)
+            .onAppear(perform: {
+                RESTController.getImage(token: self.userToken.value ?? "", contactId: self.contact.id, withCompletion: { resp in
+                    if case let resp as PictureResponse = resp {
+                        self.image = Image(resp.url.absoluteString)
+                        }
+                    }
+                )
+            })
             VStack {
                 Text("\(contact.name)").bold().font(.system(size: 25))
                 Text("0\(contact.phoneNumb.formattedWithSeparator)").italic().font(.system(size: 20))

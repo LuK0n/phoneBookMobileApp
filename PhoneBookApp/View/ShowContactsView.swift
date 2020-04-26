@@ -30,6 +30,17 @@ struct ShowContactsView: View {
                     }
                 Spacer()
             }
+            .onAppear(perform: {
+                    RESTController.getContacts(token: self.userToken.value ?? "", withCompletion: {resp in
+                        if case let responses as [ContactResp] = resp {
+                            var contactsToRet = [Contact]()
+                            for response in responses {
+                                contactsToRet.append(Contact(id: response.id, name: response.name, email: response.email, phoneNumber: response.phoneNumber))
+                            }
+                            self.contacts = contactsToRet
+                        }
+                    })
+                })
             .navigationBarTitle(Text("Contacts"))
             .background(
                 LinearGradient(gradient: Gradient(colors:[.purple,.blue]), startPoint: .top, endPoint:.bottom).scaledToFill()
@@ -38,18 +49,7 @@ struct ShowContactsView: View {
                 .navigationBarItems(leading:
                     HStack {
                                 HStack {
-                                    Button(action: {
-                                        let contact = ContactResp(id: nil, name: "name", email: "mail", phoneNumber: 565789932)
-                                        RESTController.addContact(token: self.userToken.value ?? "", contact: contact, withCompletion: {resp in
-                                            if case let response as URLResponse = resp {
-                                                if self.contacts == nil {
-                                                    self.contacts = [Contact(id: contact.id, name: contact.name, email: contact.email, phoneNumber: contact.phoneNumb)]
-                                                } else {
-                                                self.contacts.append(Contact(id: contact.id, name: contact.name, email: contact.email, phoneNumber: contact.phoneNumb))
-                                                }
-                                            }
-                                        })
-                                    }) {
+                                    NavigationLink(destination: AddContactView()) {
                                         Image(systemName: "plus")
                                     }.foregroundColor(.white)
                                 }
@@ -57,13 +57,6 @@ struct ShowContactsView: View {
                     HStack{
                         LogOutButtonView(presentationMode: presentationMode)
                     })
-            .onAppear(perform: {
-                RESTController.getContacts(token: self.userToken.value ?? "", withCompletion: {resp in
-                    if case let response as ContactResp = resp {
-                        self.contacts = [Contact(id: response.id, name: response.name, email: response.email, phoneNumber: response.phoneNumb)]
-                    }
-                })
-            })
         }.navigationBarTitle("")
         .navigationBarHidden(true)
     }

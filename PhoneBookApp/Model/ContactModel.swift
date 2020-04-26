@@ -42,14 +42,17 @@ class ContactResp : Identifiable, Codable {
      var email: String
     
     /// Contact's phone number.
-     var phoneNumb: Int
+     var phoneNumber: Int
     
     /// Relation to user
+    var user : UserId?
     
-    init(id: UUID?, name: String, email: String, phoneNumber: Int) {
+    init(id: UUID?, name: String, email: String, phoneNumber: Int, user: UserId?) {
+        self.id = id ?? UUID()
         self.name = name
         self.email = email
-        self.phoneNumb = phoneNumber
+        self.phoneNumber = phoneNumber
+        self.user = user
     }
 }
 
