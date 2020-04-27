@@ -24,6 +24,7 @@ struct Contact : Identifiable, Codable {
     /// Relation to user
     
     init(id: UUID?, name: String, email: String, phoneNumber: Int) {
+        self.id = id ?? UUID()
         self.name = name
         self.email = email
         self.phoneNumb = phoneNumber
@@ -45,28 +46,18 @@ class ContactResp : Identifiable, Codable {
      var phoneNumber: Int
     
     /// Relation to user
-    var user : UserId?
+    var userId : UserId?
     
     init(id: UUID?, name: String, email: String, phoneNumber: Int, user: UserId?) {
         self.id = id ?? UUID()
         self.name = name
         self.email = email
         self.phoneNumber = phoneNumber
-        self.user = user
+        self.userId = user
     }
 }
 
-extension Contact: Hashable {
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.hashValue)
-    }
-}
-
-
-extension Contact: Equatable {
-
-    public static func ==(lhs: Contact, rhs: Contact) -> Bool {
-        return lhs.id == rhs.id
-    }
+class ContactId: Codable {
+    var id: UUID
+    
 }

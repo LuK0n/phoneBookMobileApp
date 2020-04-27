@@ -9,6 +9,13 @@
 import Foundation
 
 final class RESTController {
+    
+    static var token : String {
+    get {
+            UserDefaults.standard.string(forKey: "token") ?? ""
+        }
+    }
+    
     static func createUser(requestData: CreateUserRequest, withCompletion completion: @escaping (UserResponse?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/users")!
@@ -52,7 +59,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func logOutUser(token: String, withCompletion completion: @escaping (URLResponse?) -> Void) {
+    static func logOutUser(withCompletion completion: @escaping (URLResponse?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/userToken")!
         // create the request
@@ -69,7 +76,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func getContacts(token: String, withCompletion completion: @escaping ([ContactResp]?) -> Void) {
+    static func getContacts(withCompletion completion: @escaping ([ContactResp]?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/contacts")!
 
@@ -89,7 +96,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func addContact(token: String, contact: Contact, withCompletion completion: @escaping (ContactResp?) -> Void) {
+    static func addContact(contact: Contact, withCompletion completion: @escaping (ContactResp?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/contacts")!
         // create the request
@@ -114,7 +121,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func changeImage(token: String, imageRequest: CreatePictureRequest, withCompletion completion: @escaping (URLResponse?) -> Void) {
+    static func changeImage(imageRequest: CreatePictureRequest, withCompletion completion: @escaping (URLResponse?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/pictures")!
         // create the request
@@ -138,7 +145,7 @@ final class RESTController {
         task.resume()
     }
     
-    static func getImage(token: String, contactId: UUID, withCompletion completion: @escaping (PictureResponse?) -> Void) {
+    static func getImage(contactId: UUID, withCompletion completion: @escaping (PictureResponse?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
         let url = URL(string: "http://localhost:8080/picturesGet")!
         // create the request
@@ -146,7 +153,9 @@ final class RESTController {
         var request = URLRequest(url: url)
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
-        let contactIdModified = contactId.description.replacingOccurrences(of: "-", with: "")
+        if contactId.description == "74112390-9FC7-42CA-8EF7-25DD1ECC5CB3" {
+            print(contactId.description)
+        }
         let pictureReq = PictureRequest(contactId: contactId)
         let jsonData = try! encoder.encode(pictureReq)
         request.httpBody = jsonData

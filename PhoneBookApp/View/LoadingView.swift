@@ -65,7 +65,7 @@ struct LoadingView: View {
                     if let response = resp {
                             self.authenticationDidFail = false
                             self.authenticationDidSucceed = true
-                        self.userToken.value = (response as UserTokenResponse).value
+                        UserDefaults.standard.set((response as UserTokenResponse).value, forKey: "token")
                         } else {
                             self.wrongAttempt.toggle()
                             self.authenticationDidFail = true

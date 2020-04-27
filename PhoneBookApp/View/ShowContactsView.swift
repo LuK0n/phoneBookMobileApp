@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct ShowContactsView: View {
     
@@ -17,30 +18,19 @@ struct ShowContactsView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject var userToken : UserToken
-    @State var contacts = [Contact]()
+    @ObservedObject var fetcher = ContactsFetcher()
     
     var body: some View {
         NavigationView {
             VStack {
                 Spacer()
-                    List(contacts, id: \.id) { contact in
+                List(fetcher.contacts) { contact in
                         NavigationLink(destination: ContactDetailView(contact: contact)) {
                                 ContactRowView(contact: contact)
                         }
                     }
                 Spacer()
-            }
-            .onAppear(perform: {
-                    RESTController.getContacts(token: self.userToken.value ?? "", withCompletion: {resp in
-                        if case let responses as [ContactResp] = resp {
-                            var contactsToRet = [Contact]()
-                            for response in responses {
-                                contactsToRet.append(Contact(id: response.id, name: response.name, email: response.email, phoneNumber: response.phoneNumber))
-                            }
-                            self.contacts = contactsToRet
-                        }
-                    })
-                })
+            }.onAppear(perform: fetcher.load)
             .navigationBarTitle(Text("Contacts"))
             .background(
                 LinearGradient(gradient: Gradient(colors:[.purple,.blue]), startPoint: .top, endPoint:.bottom).scaledToFill()

@@ -21,7 +21,6 @@ struct AddContactView: View {
     @State var image = Image("book")
     
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
-    @EnvironmentObject var userToken : UserToken
     
     var sheet : ActionSheet {
         ActionSheet(
@@ -81,9 +80,9 @@ struct AddContactView: View {
             
             Button(action: {
                 let contact = Contact(id: nil, name: self.name, email: self.email, phoneNumber: Int(self.phoneNumber) ?? 0)
-                RESTController.addContact(token: self.userToken.value ?? "", contact: contact, withCompletion: { resp in
+                RESTController.addContact(contact: contact, withCompletion: { resp in
                      if case let resp as ContactResp = resp {
-                        RESTController.changeImage(token: self.userToken.value ?? "", imageRequest: CreatePictureRequest(url: ImagePicker.shared.name ?? "book", contactId: resp.id), withCompletion: { imageResp in
+                        RESTController.changeImage(imageRequest: CreatePictureRequest(url: (ImagePicker.shared.name ?? URL(string: "book"))!, contactId: resp.id), withCompletion: { imageResp in
                                 self.mode.wrappedValue.dismiss()
                         })
                      }
@@ -110,7 +109,7 @@ struct AddContactView: View {
                     ImagePicker.shared.view
                 })
         .onReceive(ImagePicker.shared.$image) { image in
-            self.image = image ?? Image("book")
+            self.image = Image(uiImage: image ?? UIImage(named: "book")!)
         }
         .actionSheet(isPresented: $showAction) {
             sheet

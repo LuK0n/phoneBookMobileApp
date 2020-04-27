@@ -19,16 +19,27 @@ final class ImagePicker : ObservableObject {
     let coordinator = ImagePicker.Coordinator()
 
     // Bindable Object part
-    let willChange = PassthroughSubject<Image?, Never>()
+    let willChange = PassthroughSubject<UIImage?, Never>()
 
-    @Published var image: Image? = nil {
+    @Published var image: UIImage? = nil {
         didSet {
             if image != nil {
                 willChange.send(image)
+                let img = image ?? UIImage(named: "book")!
+                    if let data = img.jpegData(compressionQuality: 0.8) {
+                        let filename = self.getDocumentsDirectory().appendingPathComponent("\(img.accessibilityIdentifier)")
+                        try? data.write(to: filename)
+                        self.name = filename
+                    }
             }
         }
     }
-    @Published var name: String? = nil
+    @Published var name: URL? = nil
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
 }
 
 
@@ -41,8 +52,7 @@ extension ImagePicker {
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             let uiImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
             let imageURL = info[UIImagePickerController.InfoKey.imageURL] as! URL
-            ImagePicker.shared.name = imageURL.absoluteString
-            ImagePicker.shared.image = Image(uiImage: uiImage)
+            ImagePicker.shared.image = uiImage
             picker.dismiss(animated:true)
         }
 

@@ -11,7 +11,6 @@ import SwiftUI
 struct ContactRowView: View {
     
     let contact : Contact
-    @EnvironmentObject var userToken : UserToken
     
     @State var image : Image = Image("book")
     
@@ -25,9 +24,11 @@ struct ContactRowView: View {
             .overlay(Circle().stroke(Color.white, lineWidth: 1))
             .padding(25)
             .onAppear(perform: {
-                RESTController.getImage(token: self.userToken.value ?? "", contactId: self.contact.id, withCompletion: { resp in
+                RESTController.getImage(contactId: self.contact.id, withCompletion: { resp in
                     if case let resp as PictureResponse = resp {
-                        self.image = Image(resp.url.absoluteString)
+                        Image(uiImage: (UIImage(contentsOfFile: "") ?? UIImage(named: "book")!))
+                        print(resp.url.path)
+                        self.image = Image(uiImage: UIImage(contentsOfFile: resp.url.path) ?? UIImage(named: "book")!)
                         }
                     }
                 )
