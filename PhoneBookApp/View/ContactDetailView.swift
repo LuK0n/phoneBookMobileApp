@@ -11,9 +11,10 @@ import Combine
 
 struct ContactDetailView: View {
     
-    @State var phoneNumber = ""
+    @State var phoneNumber = "init"
     @State var showingPicker = false
     @State var showAction: Bool = false
+    @State var originImage : Image = Image("book")
     @State var image : Image = Image("book")
     
     @State var contact : Contact
@@ -46,6 +47,7 @@ struct ContactDetailView: View {
                     self.showAction = false
                     self.image = Image("book")
                     ImagePicker.shared.image = nil
+                    ImagePicker.shared.name = nil
                 })
             ])
     }
@@ -81,11 +83,11 @@ struct ContactDetailView: View {
                     .keyboardType(.numberPad)
                     .onReceive(Just(phoneNumber)) { newValue in
                         let filtered = newValue.filter { "0123456789".contains($0) }
+                        if newValue == "init" {
+                            return
+                        }
                         if filtered != newValue {
                             self.phoneNumber = filtered
-                        }
-                        if filtered == newValue && filtered.count == 0 {
-                            return
                         }
                         self.contact.phoneNumber = Int(self.phoneNumber) ?? 0
                     }
@@ -159,8 +161,9 @@ struct ContactDetailView: View {
             ImagePicker.shared.image = nil
         })
         .onAppear(perform: {
-            self.phoneNumber = self.contact.phoneNumber.description
+            self.phoneNumber = String(self.contact.phoneNumber)
             self.image = DataFetcher.shared.getImage(id: self.contact.id)
+            self.originImage = self.image
             self.address = DataFetcher.shared.getAddress(id: self.contact.id)
         })
     }
@@ -171,6 +174,10 @@ struct ContactDetailView: View {
         })
         RESTController.updateContact(contact: self.contact, withCompletion: { resp in
         })
+        
+        if self.originImage == self.image {
+            return
+        }
         RESTController.changeImage(imageRequest: CreatePictureRequest(url: (ImagePicker.shared.name ?? URL(string: "book"))!, contactId: self.contact.id), withCompletion: { resp in
             DataFetcher.shared.load()
         })
