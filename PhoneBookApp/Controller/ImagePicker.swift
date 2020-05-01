@@ -27,10 +27,12 @@ final class ImagePicker : ObservableObject {
                 willChange.send(image)
                 let img = image ?? UIImage(named: "book")!
                     if let data = img.jpegData(compressionQuality: 0.8) {
-                        let filename = self.getDocumentsDirectory().appendingPathComponent("\(img.accessibilityIdentifier)")
+                        let filename = self.getDocumentsDirectory().appendingPathComponent("\(img.hashValue)")
                         try? data.write(to: filename)
                         self.name = filename
                     }
+            } else {
+                self.name = nil
             }
         }
     }
@@ -51,7 +53,6 @@ extension ImagePicker {
         func imagePickerController(_ picker: UIImagePickerController,
                                    didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
             let uiImage = info[UIImagePickerController.InfoKey.originalImage] as! UIImage
-            let imageURL = info[UIImagePickerController.InfoKey.imageURL] as! URL
             ImagePicker.shared.image = uiImage
             picker.dismiss(animated:true)
         }

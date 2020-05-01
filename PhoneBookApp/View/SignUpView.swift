@@ -57,8 +57,8 @@ struct SignUpView: View {
             }.padding([.leading, .trailing], 27.5)
                 
             Button(action: {
-                RESTController.createUser(requestData: CreateUserRequest(name: self.name, email: self.email, password: self.password, verifyPassword: self.verifyPass), withCompletion: { resp in
-                    if let _ = resp {
+                RESTController.createUser(requestData: CreateUserRequest(name: self.name, email: self.email, password: self.password, verifyPassword: self.verifyPass), withCompletion: { (resp : UserResponse?) in
+                    if case let resp as UserResponse = resp {
                         self.mode.wrappedValue.dismiss()
                     } else {
                         self.wrongAttempt.toggle()

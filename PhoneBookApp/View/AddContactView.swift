@@ -17,8 +17,9 @@ struct AddContactView: View {
     
     @State var showingPicker = false
     @State var showAction: Bool = false
+    @State var didSet: Bool = false
 
-    @State var image = Image("book")
+    @State var image : Image = Image("book")
     
     @Environment(\.presentationMode) var mode: Binding<PresentationMode>
     
@@ -37,13 +38,14 @@ struct AddContactView: View {
                 .destructive(Text("Remove"), action: {
                     self.showAction = false
                     self.image = Image("book")
+                    ImagePicker.shared.image = nil
                 })
             ])
     }
 
     var body: some View {
         VStack {
-            image
+            self.image
             .resizable()
             .frame(width: 250, height: 250)
             .clipShape(Circle())
@@ -79,11 +81,12 @@ struct AddContactView: View {
             }.padding([.leading, .trailing], 27.5)
             
             Button(action: {
-                let contact = Contact(id: nil, name: self.name, email: self.email, phoneNumber: Int(self.phoneNumber) ?? 0)
+                let contact = Contact(id: nil, name: self.name, email: self.email, phoneNumber: Int(self.phoneNumber) ?? 0, user: nil)
                 RESTController.addContact(contact: contact, withCompletion: { resp in
-                     if case let resp as ContactResp = resp {
+                     if case let resp as Contact = resp {
                         RESTController.changeImage(imageRequest: CreatePictureRequest(url: (ImagePicker.shared.name ?? URL(string: "book"))!, contactId: resp.id), withCompletion: { imageResp in
-                                self.mode.wrappedValue.dismiss()
+                            ImagePicker.shared.image = nil
+                            self.mode.wrappedValue.dismiss()
                         })
                      }
                  })
@@ -119,7 +122,7 @@ struct AddContactView: View {
 
 struct AddContactView_Previews: PreviewProvider {
     static var previews: some View {
-        AddContactView()
+        AddContactView(image: Image("book"))
     }
 }
 

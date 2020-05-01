@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Contact : Identifiable, Codable {
+class Contact : Identifiable, Codable {
     
     var id = UUID()
         
@@ -19,31 +19,7 @@ struct Contact : Identifiable, Codable {
     var email: String
     
     /// Contact's phone number.
-    var phoneNumb: Int
-    
-    /// Relation to user
-    
-    init(id: UUID?, name: String, email: String, phoneNumber: Int) {
-        self.id = id ?? UUID()
-        self.name = name
-        self.email = email
-        self.phoneNumb = phoneNumber
-    }
-}
-
-class ContactResp : Identifiable, Codable {
-
-    /// Contact's unique identifier.
-    var id = UUID()
-    
-    /// Contact's full name.
-     var name: String
-    
-    /// Contact's email address.
-     var email: String
-    
-    /// Contact's phone number.
-     var phoneNumber: Int
+    var phoneNumber: Int
     
     /// Relation to user
     var userId : UserId?
@@ -60,4 +36,8 @@ class ContactResp : Identifiable, Codable {
 class ContactId: Codable {
     var id: UUID
     
+}
+
+struct ContactModifyRequest : Codable {
+    var contactId: UUID
 }

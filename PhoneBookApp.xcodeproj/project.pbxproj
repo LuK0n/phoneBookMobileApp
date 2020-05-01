@@ -13,14 +13,16 @@
 		A90A565F24520DA200E1774E /* ContactModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90A565E24520DA200E1774E /* ContactModel.swift */; };
 		A90A566124521C5100E1774E /* ContactDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90A566024521C5100E1774E /* ContactDetailView.swift */; };
 		A90A56632452228000E1774E /* LogOutButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90A56622452228000E1774E /* LogOutButtonView.swift */; };
-		A90A56652452317D00E1774E /* AddContactButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90A56642452317D00E1774E /* AddContactButtonView.swift */; };
-		A92BFF23245764D30022CB70 /* ContactsFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92BFF22245764D30022CB70 /* ContactsFetcher.swift */; };
+		A911C2C7245A03BE00E6E1DB /* Address.swift in Sources */ = {isa = PBXBuildFile; fileRef = A911C2C6245A03BD00E6E1DB /* Address.swift */; };
+		A92BFF23245764D30022CB70 /* DataFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92BFF22245764D30022CB70 /* DataFetcher.swift */; };
 		A98522BA244B4C0000DF1D56 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98522B9244B4C0000DF1D56 /* AppDelegate.swift */; };
 		A98522BC244B4C0000DF1D56 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98522BB244B4C0000DF1D56 /* SceneDelegate.swift */; };
 		A98522BE244B4C0000DF1D56 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98522BD244B4C0000DF1D56 /* LoadingView.swift */; };
 		A98522C0244B4C0100DF1D56 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A98522BF244B4C0100DF1D56 /* Assets.xcassets */; };
 		A98522C3244B4C0100DF1D56 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A98522C2244B4C0100DF1D56 /* Preview Assets.xcassets */; };
 		A98522C6244B4C0100DF1D56 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A98522C4244B4C0100DF1D56 /* LaunchScreen.storyboard */; };
+		A997BB90245CA6B300FFA79C /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A997BB8F245CA6B300FFA79C /* Helper.swift */; };
+		A997BB92245CC54A00FFA79C /* GenericResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = A997BB91245CC54A00FFA79C /* GenericResponse.swift */; };
 		A9DC6317244E245D00E09749 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC6316244E245D00E09749 /* SignUpView.swift */; };
 		A9E8B413244F79A800C30008 /* ShowContactsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E8B412244F79A800C30008 /* ShowContactsView.swift */; };
 		A9FB2C3A2455ADF500D15262 /* AddContactView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FB2C392455ADF500D15262 /* AddContactView.swift */; };
@@ -35,8 +37,8 @@
 		A90A565E24520DA200E1774E /* ContactModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactModel.swift; sourceTree = "<group>"; };
 		A90A566024521C5100E1774E /* ContactDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailView.swift; sourceTree = "<group>"; };
 		A90A56622452228000E1774E /* LogOutButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogOutButtonView.swift; sourceTree = "<group>"; };
-		A90A56642452317D00E1774E /* AddContactButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactButtonView.swift; sourceTree = "<group>"; };
-		A92BFF22245764D30022CB70 /* ContactsFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsFetcher.swift; sourceTree = "<group>"; };
+		A911C2C6245A03BD00E6E1DB /* Address.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Address.swift; sourceTree = "<group>"; };
+		A92BFF22245764D30022CB70 /* DataFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFetcher.swift; sourceTree = "<group>"; };
 		A98522B6244B4C0000DF1D56 /* PhoneBookApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneBookApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A98522B9244B4C0000DF1D56 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A98522BB244B4C0000DF1D56 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,6 +47,8 @@
 		A98522C2244B4C0100DF1D56 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A98522C5244B4C0100DF1D56 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A98522C7244B4C0100DF1D56 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A997BB8F245CA6B300FFA79C /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		A997BB91245CC54A00FFA79C /* GenericResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericResponse.swift; sourceTree = "<group>"; };
 		A9DC6316244E245D00E09749 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		A9E8B412244F79A800C30008 /* ShowContactsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShowContactsView.swift; sourceTree = "<group>"; };
 		A9FB2C392455ADF500D15262 /* AddContactView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddContactView.swift; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 				A901FF81244B5C62009D0776 /* UserModels.swift */,
 				A90A565E24520DA200E1774E /* ContactModel.swift */,
 				A9FB2C3D2455C2B300D15262 /* PictureModels.swift */,
+				A911C2C6245A03BD00E6E1DB /* Address.swift */,
+				A997BB91245CC54A00FFA79C /* GenericResponse.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -130,7 +136,6 @@
 				A90A565C2452096700E1774E /* ContactRowView.swift */,
 				A90A566024521C5100E1774E /* ContactDetailView.swift */,
 				A90A56622452228000E1774E /* LogOutButtonView.swift */,
-				A90A56642452317D00E1774E /* AddContactButtonView.swift */,
 				A9FB2C392455ADF500D15262 /* AddContactView.swift */,
 			);
 			path = View;
@@ -139,9 +144,10 @@
 		A9A57460244B4DD500CA0713 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				A997BB8F245CA6B300FFA79C /* Helper.swift */,
 				A901FF7F244B5A3B009D0776 /* RESTController.swift */,
 				A9FB2C3B2455B77000D15262 /* ImagePicker.swift */,
-				A92BFF22245764D30022CB70 /* ContactsFetcher.swift */,
+				A92BFF22245764D30022CB70 /* DataFetcher.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -217,7 +223,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A92BFF23245764D30022CB70 /* ContactsFetcher.swift in Sources */,
+				A997BB92245CC54A00FFA79C /* GenericResponse.swift in Sources */,
+				A92BFF23245764D30022CB70 /* DataFetcher.swift in Sources */,
 				A901FF82244B5C62009D0776 /* UserModels.swift in Sources */,
 				A9E8B413244F79A800C30008 /* ShowContactsView.swift in Sources */,
 				A90A565F24520DA200E1774E /* ContactModel.swift in Sources */,
@@ -225,11 +232,12 @@
 				A9FB2C3C2455B77000D15262 /* ImagePicker.swift in Sources */,
 				A98522BA244B4C0000DF1D56 /* AppDelegate.swift in Sources */,
 				A901FF80244B5A3B009D0776 /* RESTController.swift in Sources */,
-				A90A56652452317D00E1774E /* AddContactButtonView.swift in Sources */,
 				A98522BC244B4C0000DF1D56 /* SceneDelegate.swift in Sources */,
 				A9DC6317244E245D00E09749 /* SignUpView.swift in Sources */,
 				A90A565D2452096700E1774E /* ContactRowView.swift in Sources */,
+				A911C2C7245A03BE00E6E1DB /* Address.swift in Sources */,
 				A90A56632452228000E1774E /* LogOutButtonView.swift in Sources */,
+				A997BB90245CA6B300FFA79C /* Helper.swift in Sources */,
 				A98522BE244B4C0000DF1D56 /* LoadingView.swift in Sources */,
 				A90A566124521C5100E1774E /* ContactDetailView.swift in Sources */,
 				A9FB2C3A2455ADF500D15262 /* AddContactView.swift in Sources */,

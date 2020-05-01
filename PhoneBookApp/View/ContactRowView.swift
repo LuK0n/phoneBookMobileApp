@@ -12,7 +12,7 @@ struct ContactRowView: View {
     
     let contact : Contact
     
-    @State var image : Image = Image("book")
+    @State var image : Image =  Image("book")
     
     var body: some View {
         HStack(alignment: .center) {
@@ -23,22 +23,14 @@ struct ContactRowView: View {
             .clipped()
             .overlay(Circle().stroke(Color.white, lineWidth: 1))
             .padding(25)
-            .onAppear(perform: {
-                RESTController.getImage(contactId: self.contact.id, withCompletion: { resp in
-                    if case let resp as PictureResponse = resp {
-                        Image(uiImage: (UIImage(contentsOfFile: "") ?? UIImage(named: "book")!))
-                        print(resp.url.path)
-                        self.image = Image(uiImage: UIImage(contentsOfFile: resp.url.path) ?? UIImage(named: "book")!)
-                        }
-                    }
-                )
-            })
             VStack {
                 Text("\(contact.name)").bold().font(.system(size: 25))
-                Text("0\(contact.phoneNumb.formattedWithSeparator)").italic().font(.system(size: 20))
+                Text("\(contact.phoneNumber.formattedWithSeparator)").italic().font(.system(size: 20))
                 Text("\(contact.email)").italic().font(.system(size: 20))
             }.foregroundColor(Color.white)
-        }
+        }.onAppear(perform: {
+            self.image = DataFetcher.shared.getImage(id: self.contact.id)
+        })
     }
 }
 
@@ -60,7 +52,7 @@ extension Numeric {
 #if DEBUG
 struct ContactRowView_Previews: PreviewProvider {
     static var previews: some View {
-        ContactRowView(contact: Contact(id: nil, name: "Mark Markov", email: "mail@server.com", phoneNumber: 0945648533))
+        ContactRowView(contact: Contact(id: nil, name: "Mark Markov", email: "mail@server.com", phoneNumber: 0945648533, user: nil), image: Image("book"))
     }
 }
 #endif

@@ -18,7 +18,7 @@ struct LogOutButtonView: View {
             Button("Log Out") {
                 RESTController.logOutUser(withCompletion: { resp in
                     if let response = resp {
-                        if let httpResponse = response as? HTTPURLResponse {
+                        if let httpResponse = response as? GenericResponse {
                             if httpResponse.statusCode == 200 {
                                 UserDefaults.standard.set("", forKey: "token")
                                 self.presentationMode?.wrappedValue.dismiss()

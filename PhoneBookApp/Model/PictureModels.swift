@@ -25,10 +25,8 @@ struct PictureResponse : Codable {
         self.url = url
         self.contact = contact
     }
-    
-    
 }
 
-struct PictureRequest : Codable {
-    var contactId: UUID
+struct DeletePictureRequest : Codable {
+    var pictureId : UUID
 }

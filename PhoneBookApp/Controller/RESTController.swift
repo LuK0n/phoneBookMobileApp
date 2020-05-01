@@ -16,23 +16,30 @@ final class RESTController {
         }
     }
     
-    static func createUser(requestData: CreateUserRequest, withCompletion completion: @escaping (UserResponse?) -> Void) {
+    static func makeRestCall<A: Codable,R: Codable>(requestData: A?, endPoint: Endpoint, method: HTTPMethod, withCompletion completion: @escaping (R?) -> Void) {
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
-        let url = URL(string: "http://localhost:8080/users")!
+        let url = URL(string: "http://localhost:8080/\(endPoint.rawValue)")!
         var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        let jsonData = try! encoder.encode(requestData)
-        request.httpBody = jsonData
+        request.httpMethod = method.rawValue
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        if let requestData = requestData {
+            let encoder = JSONEncoder()
+            encoder.outputFormatting = .prettyPrinted
+            let jsonData = try! encoder.encode(requestData)
+            request.httpBody = jsonData
+        }
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
             guard let data = data else {
                 completion(nil)
                 return
             }
-            let wrapper = try? JSONDecoder().decode(UserResponse.self, from: data)
-            completion(wrapper)
+            let wrapper = try? JSONDecoder().decode(R.self, from: data)
+            if let wrapper = wrapper {
+                completion(wrapper)
+            } else {
+                completion(nil)
+            }
         }
         task.resume()
     }
@@ -59,120 +66,48 @@ final class RESTController {
         task.resume()
     }
     
-    static func logOutUser(withCompletion completion: @escaping (URLResponse?) -> Void) {
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
-        let url = URL(string: "http://localhost:8080/userToken")!
-        // create the request
-        var request = URLRequest(url: url)
-        request.httpMethod = "DELETE"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            guard let _ = data else {
-                completion(nil)
-                return
-            }
-            completion(response)
-        }
-        task.resume()
+    static func createUser<A: Codable,R: Codable>(requestData: A, withCompletion completion: @escaping (R?) -> Void) {
+        return makeRestCall(requestData: requestData, endPoint: .users, method: .POST, withCompletion: completion)
     }
     
-    static func getContacts(withCompletion completion: @escaping ([ContactResp]?) -> Void) {
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
-        let url = URL(string: "http://localhost:8080/contacts")!
-
-        // create the request
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            guard let data = data else {
-                completion(nil)
-                return
-            }
-            let wrapper = try? JSONDecoder().decode([ContactResp].self, from: data)
-            completion(wrapper)
-        }
-        task.resume()
+    static func logOutUser(withCompletion completion: @escaping (GenericResponse?) -> Void) {
+        return makeRestCall(requestData: Optional<String>.none, endPoint: .userToken, method: .DELETE, withCompletion: completion.self)
     }
     
-    static func addContact(contact: Contact, withCompletion completion: @escaping (ContactResp?) -> Void) {
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
-        let url = URL(string: "http://localhost:8080/contacts")!
-        // create the request
-        
-        var request = URLRequest(url: url)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        let jsonData = try! encoder.encode(contact)
-        request.httpBody = jsonData
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            guard let data = data else {
-                completion(nil)
-                return
-            }
-            let wrapper = try? JSONDecoder().decode(ContactResp.self, from: data)
-            completion(wrapper)
-        }
-        task.resume()
+    static func getContacts(withCompletion completion: @escaping ([Contact]?) -> Void) {
+        return makeRestCall(requestData: Optional<String>.none, endPoint: .contacts, method: .GET, withCompletion: completion)
     }
     
-    static func changeImage(imageRequest: CreatePictureRequest, withCompletion completion: @escaping (URLResponse?) -> Void) {
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
-        let url = URL(string: "http://localhost:8080/pictures")!
-        // create the request
-        
-        var request = URLRequest(url: url)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        let jsonData = try! encoder.encode(imageRequest)
-        request.httpBody = jsonData
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            guard let _ = data else {
-                completion(nil)
-                return
-            }
-            completion(response)
-        }
-        task.resume()
+    static func addContact(contact: Contact, withCompletion completion: @escaping (Contact?) -> Void) {
+        return makeRestCall(requestData: contact, endPoint: .contacts, method: .POST, withCompletion: completion.self)
+    }
+    
+    static func changeImage(imageRequest: CreatePictureRequest, withCompletion completion: @escaping (PictureResponse?) -> Void) {
+        return makeRestCall(requestData: imageRequest, endPoint: .pictures, method: .POST, withCompletion: completion)
     }
     
     static func getImage(contactId: UUID, withCompletion completion: @escaping (PictureResponse?) -> Void) {
-        let session = URLSession(configuration: .default, delegate: nil, delegateQueue: .main)
-        let url = URL(string: "http://localhost:8080/picturesGet")!
-        // create the request
-        
-        var request = URLRequest(url: url)
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        if contactId.description == "74112390-9FC7-42CA-8EF7-25DD1ECC5CB3" {
-            print(contactId.description)
-        }
-        let pictureReq = PictureRequest(contactId: contactId)
-        let jsonData = try! encoder.encode(pictureReq)
-        request.httpBody = jsonData
-        request.httpMethod = "POST"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) -> Void in
-            guard let data = data else {
-                completion(nil)
-                return
-            }
-            
-            let wrapper = try? JSONDecoder().decode(PictureResponse.self, from: data)
-            completion(wrapper)
-        }
-        task.resume()
+        return makeRestCall(requestData: ContactModifyRequest(contactId: contactId), endPoint: .picturesGet, method: .POST, withCompletion: completion.self)
+    }
+    
+    static func deleteContact(contactId: UUID, withCompletion completion: @escaping (GenericResponse?) -> Void) {
+        return makeRestCall(requestData: ContactModifyRequest(contactId: contactId), endPoint: .contacts, method: .DELETE, withCompletion: completion.self)
+    }
+    
+    static func getAddress(contactId: UUID, withCompletion completion: @escaping (Address?) -> Void) {
+        return makeRestCall(requestData: ContactModifyRequest(contactId: contactId), endPoint: .addressesGet, method: .POST, withCompletion: completion.self)
+    }
+    
+    static func postAddress(addressRequest: CreateAddressRequest, withCompletion completion: @escaping (Address?) -> Void) {
+        return makeRestCall(requestData: addressRequest, endPoint: .addresses, method: .POST, withCompletion: completion.self)
+    }
+    
+    static func deleteAddress(addressId: UUID, withCompletion completion: @escaping (GenericResponse?) -> Void) {
+        return makeRestCall(requestData: DeleteAddressRequest(addressId: addressId), endPoint: .addresses, method: .DELETE, withCompletion: completion.self)
+    }
+    
+    static func updateContact(contact: Contact, withCompletion completion: @escaping (Contact?) -> Void) {
+        return makeRestCall(requestData: contact, endPoint: .contactsUpdate, method: .POST, withCompletion: completion)
     }
 
 }
